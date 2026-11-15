@@ -103,6 +103,8 @@
     .booking-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: 8vw; align-items: start; }
     .booking-intro h2 { font: 400 clamp(3rem,6vw,5.8rem)/.94 var(--serif); letter-spacing: -.05em; margin: 15px 0 25px; }
     .booking-intro p { color: var(--muted); line-height: 1.8; }
+    .thefork-widget { width: 100%; min-width: 0; background: white; }
+    .thefork-widget iframe { display: block; width: 100%; min-height: 800px; border: 0; }
     form { display: grid; grid-template-columns: 1fr 1fr; gap: 19px 16px; }
     .field { display: flex; flex-direction: column; gap: 8px; }
     .field.full { grid-column: 1 / -1; }
@@ -266,27 +268,16 @@
           <p><strong>Attenzione:</strong> l'invio del modulo non costituisce una prenotazione confermata. Tutte le richieste sono soggette a conferma da parte del ristorante.</p>
         </div>
 
-        <!-- MODIFICA QUI: sostituisci INDIRIZZO_EMAIL con la vostra email.
-             FormSubmit invia il modulo via email dopo una prima attivazione.
-             Non inserire dati sensibili nel campo note. -->
-        <form id="reservation-form">
-          <input type="hidden" name="_subject" value="Nuova richiesta di prenotazione - Locanda il Pagliaccetto">
-          <input type="hidden" name="_captcha" value="false">
-          <input type="text" name="_honey" value="" style="display:none" tabindex="-1" autocomplete="off">
-          <input type="hidden" name="_template" value="table">
-          <div class="field"><label for="nome">Nome e cognome *</label><input id="nome" name="Nome e cognome" autocomplete="name" required></div>
-          <div class="field"><label for="persone">Numero di persone *</label><select id="persone" name="Numero di persone" required><option value="">Seleziona</option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>Più di 10 (specificare nelle note)</option></select></div>
-          <div class="field"><label for="data">Data richiesta *</label><input id="data" type="date" name="Data richiesta" required></div>
-          <div class="field"><label for="orario">Fascia oraria preferita *</label><select id="orario" name="Fascia oraria" required><option value="">Seleziona una fascia</option><option>19:00</option><option>20:00</option><option>21:00</option></select></div>
-          <div class="field"><label for="email">Email *</label><input id="email" type="email" name="Email" autocomplete="email" required></div>
-          <div class="field"><label for="telefono">Numero di telefono *</label><input id="telefono" type="tel" name="Telefono" autocomplete="tel" required></div>
-          <div class="field full"><label for="note">Note o esigenze particolari</label><textarea id="note" name="Note" placeholder="Seggioloni, esigenze alimentari, occasione speciale..."></textarea></div>
-          <div class="form-confirm"><strong>Importante — richiesta soggetta a conferma.</strong><br>Il ristorante verificherà la disponibilità e ti contatterà al numero indicato per confermare. Se non ci fosse più posto nella fascia richiesta, potremo proporti un'alternativa. Non considerare la prenotazione confermata fino al nostro contatto.</div>
-          <p class="form-small">I campi contrassegnati con * sono obbligatori. Inviando la richiesta, autorizzi il ristorante a utilizzare i dati inseriti per ricontattarti in merito alla prenotazione.</p>
-          <button class="button" type="submit">Invia richiesta</button>
-          <p class="form-status" role="status" aria-live="polite"></p>
-          <span class="required-note">L'invio non conferma automaticamente il tavolo.</span>
-        </form>
+        <!-- Widget prenotazioni TheFork -->
+        <div class="thefork-widget">
+          <iframe
+            src="https://widget.thefork.com/17a846fd-930e-48e8-9f1e-6bbf26c4f60c"
+            title="Prenota un tavolo alla Locanda il Pagliaccetto"
+            allow="payment *"
+            style="width: 100%; min-height: 800px; border: none; overflow: scroll;"
+            loading="lazy">
+          </iframe>
+        </div>
       </div>
     </section>
 
