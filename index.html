@@ -334,31 +334,37 @@ form.addEventListener('submit', async function(e) {
 
     const button = form.querySelector('[type="submit"]');
     button.disabled = true;
-    button.textContent = 'Invio in corso...';
-
-    const data = new FormData(form);
 
     try {
-        const response = await fetch('https://formsubmit.co/ajax/ilpagliaccetto77@gmail.com', {
-            method: 'POST',
-            body: data,
-            headers: {
-                'Accept': 'application/json'
-            }
-        });
+        const dati = Object.fromEntries(new FormData(form));
 
-        if (response.ok) {
+        const risposta = await fetch(
+            'https://formsubmit.co/ajax/ilpagliaccetto77@gmail.com',
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(dati)
+            }
+        );
+
+        const risultato = await risposta.json();
+
+        if (risultato.success === true ||
+            risultato.success === "true") {
             form.reset();
-            alert('Richiesta inviata correttamente! Ti ricontatteremo al più presto.');
+            alert('Richiesta inviata correttamente!');
         } else {
-            alert('Errore durante l’invio. Riprova.');
+            alert('Invio non riuscito: ' + risultato.message);
         }
-    } catch (error) {
+
+    } catch (errore) {
         alert('Errore di connessione. Riprova.');
     }
 
     button.disabled = false;
-    button.textContent = 'Invia richiesta';
 });
 </script>
   <script>
