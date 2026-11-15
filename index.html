@@ -80,8 +80,19 @@
     .story-card p { max-width: 410px; line-height: 1.65; color: rgba(255,255,255,.85); }
     /* FOOD */
     .food-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7vw; align-items: center; }
-    .food-image { height: 650px; background: var(--paper-deep); }
+    .food-image { height: 650px; background: var(--paper-deep); position: relative; overflow: hidden; }
     .food-image img { width: 100%; height: 100%; object-fit: cover; }
+    /* Gallerie scorrevoli: il riquadro mantiene le dimensioni originali */
+    .photo-carousel { position: relative; width: 100%; height: 100%; overflow: hidden; background: var(--paper-deep); }
+    .photo-carousel-track { display: flex; width: 100%; height: 100%; transition: transform .45s ease; will-change: transform; }
+    .photo-carousel-track img { flex: 0 0 100%; width: 100%; height: 100%; min-width: 100%; object-fit: cover; }
+    .photo-carousel-button { position: absolute; z-index: 2; top: 50%; transform: translateY(-50%); width: 44px; height: 44px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.75); border-radius: 50%; background: rgba(18,63,92,.62); color: white; font-size: 1.5rem; line-height: 1; cursor: pointer; transition: background .2s, transform .2s; }
+    .photo-carousel-button:hover { background: rgba(18,63,92,.92); transform: translateY(-50%) scale(1.06); }
+    .photo-carousel-button.prev { left: 16px; }
+    .photo-carousel-button.next { right: 16px; }
+    .photo-carousel-dots { position: absolute; z-index: 2; left: 0; right: 0; bottom: 17px; display: flex; justify-content: center; gap: 9px; }
+    .photo-carousel-dot { width: 9px; height: 9px; padding: 0; border: 1px solid white; border-radius: 50%; background: rgba(255,255,255,.45); cursor: pointer; }
+    .photo-carousel-dot[aria-current="true"] { background: white; transform: scale(1.2); }
     .food-copy h2 { font: 400 clamp(3rem,6vw,6rem)/.92 var(--serif); letter-spacing: -.05em; margin: 18px 0 25px; }
     .food-copy p { color: var(--muted); line-height: 1.85; max-width: 480px; }
     .menu-note { margin-top: 34px; padding: 22px 24px; border-left: 2px solid var(--rust); background: #f0f7fc; line-height: 1.7; font-size: .9rem; }
@@ -95,7 +106,7 @@
     /* ROOMS */
     .rooms { background: var(--paper-deep); }
     .rooms-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7vw; align-items: center; }
-    .rooms-grid img { width: 100%; height: 570px; object-fit: cover; }
+    .rooms-grid > .photo-carousel { width: 100%; height: 570px; }
     .rooms-grid h2 { font: 400 clamp(3rem,6vw,5.7rem)/.95 var(--serif); letter-spacing: -.05em; margin: 15px 0 25px; }
     .rooms-grid p { color: var(--muted); line-height: 1.8; max-width: 470px; }
     /* BOOKING */
@@ -119,6 +130,31 @@
     .required-note { font-size: .73rem; color: var(--muted); }
     .form-status { grid-column: 1 / -1; margin: 0; min-height: 1.2em; color: var(--blue-dark); font-size: .88rem; line-height: 1.5; }
     .form-status.error { color: #a32626; }
+
+    /* LA LOCANDA IN IMMAGINI */
+    .moments { background: var(--paper); }
+    .moments-intro { display: flex; justify-content: space-between; align-items: end; gap: 34px; margin-bottom: 30px; }
+    .moments-intro h2 { max-width: 760px; margin: 14px 0 0; font: 400 clamp(2.8rem, 6vw, 5.4rem)/.96 var(--serif); letter-spacing: -.05em; }
+    .moments-intro p { max-width: 350px; margin: 0 0 5px; color: var(--muted); line-height: 1.8; }
+    .moments-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+    .moment-photo { position: relative; display: block; aspect-ratio: 1.22 / 1; overflow: hidden; background: var(--paper-deep); cursor: zoom-in; }
+    .moment-photo img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .moment-photo:hover img { transform: scale(1.055); }
+    .moment-photo::after { content: "＋"; position: absolute; right: 9px; bottom: 9px; width: 29px; height: 29px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.8); border-radius: 50%; color: white; background: rgba(18,63,92,.55); opacity: 0; transition: opacity .25s; }
+    .moment-photo:hover::after, .moment-photo:focus-visible::after { opacity: 1; }
+    .moments-bottom { display: flex; justify-content: space-between; align-items: center; gap: 24px; margin-top: 30px; padding-top: 24px; border-top: 1px solid var(--line); }
+    .moments-bottom p { max-width: 610px; margin: 0; color: var(--muted); line-height: 1.75; }
+    .moments-lightbox { position: fixed; inset: 0; z-index: 9999; display: none; align-items: center; justify-content: center; padding: 54px 76px; background: rgba(10, 20, 26, .94); }
+    .moments-lightbox.is-open { display: flex; }
+    .moments-lightbox img { display: block; max-width: min(100%, 1200px); max-height: calc(100vh - 108px); width: auto; height: auto; object-fit: contain; box-shadow: 0 18px 70px rgba(0,0,0,.35); }
+    .lightbox-close, .lightbox-arrow { position: absolute; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.55); border-radius: 50%; color: white; background: rgba(255,255,255,.1); cursor: pointer; transition: background .2s; }
+    .lightbox-close:hover, .lightbox-arrow:hover { background: rgba(255,255,255,.25); }
+    .lightbox-close { top: 20px; right: 24px; width: 44px; height: 44px; font-size: 27px; }
+    .lightbox-arrow { top: 50%; width: 48px; height: 48px; font-size: 30px; transform: translateY(-50%); }
+    .lightbox-prev { left: 18px; }
+    .lightbox-next { right: 18px; }
+    .lightbox-count { position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,.8); font-size: .78rem; letter-spacing: .12em; }
+    body.lightbox-open { overflow: hidden; }
     /* CONTACT */
     .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8vw; }
     .contact-grid h2 { font: 400 clamp(3rem,6vw,5.5rem)/.95 var(--serif); letter-spacing: -.05em; margin: 15px 0 28px; }
@@ -149,14 +185,26 @@
       .photo-frame, .photo-frame img { min-height: 390px; }
       .story-grid { grid-template-columns: 1fr; }
       .story-card { min-height: 470px; }
-      .food-image, .rooms-grid img { height: 420px; }
+      .food-image, .rooms-grid > .photo-carousel { height: 420px; }
       .animal-band { grid-template-columns: 1fr; gap: 32px; }
       .animal-band img { height: 340px; }
       .family-note { align-items: start; flex-direction: column; }
       form { grid-template-columns: 1fr; }
       .field.full, .form-small, .form-confirm { grid-column: auto; }
+      .moments-intro { display: block; }
+      .moments-intro p { margin-top: 20px; }
+      .moments-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+      .moment-photo { aspect-ratio: 1.12 / 1; }
+      .moments-bottom { align-items: start; flex-direction: column; }
       .contact-details { gap: 18px; }
       .footer-inner { align-items: start; flex-direction: column; }
+    }
+    @media (max-width: 480px) {
+      .moments-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+      .moments-lightbox { padding: 54px 48px; }
+      .lightbox-prev { left: 6px; }
+      .lightbox-next { right: 6px; }
+      .lightbox-arrow { width: 38px; height: 38px; }
     }
   </style>
 </head>
@@ -167,7 +215,7 @@
     <nav class="hero-nav" aria-label="Navigazione principale">
       <a class="brand" href="#inizio">Locanda il Pagliaccetto</a>
       <div class="nav-links">
-        <a href="#locanda">La locanda</a><a href="#cucina">La cucina</a><a href="#fattoria">La fattoria</a><a href="#camere">Le camere</a><a href="#prenota">Prenota</a>
+        <a href="#locanda">La locanda</a><a href="#cucina">La cucina</a><a href="#fattoria">La fattoria</a><a href="#camere">Le camere</a><a href="#prenota">Prenota</a><a href="#momenti">La locanda in immagini</a>
       </div>
       <a class="mobile-menu" href="#prenota">Prenota un tavolo ↗</a>
     </nav>
@@ -218,7 +266,24 @@
 
     <section class="section" id="cucina">
       <div class="wrap food-grid">
-        <div class="food-image"><img src="Images/cucina.webp" alt="Un piatto preparato nella cucina della locanda" loading="lazy" decoding="async"></div>
+        <div class="food-image">
+          <div class="photo-carousel" data-carousel aria-label="Galleria fotografica della cucina">
+            <div class="photo-carousel-track">
+              <img src="Images/cucina.webp" alt="La cucina della locanda, foto 1" loading="lazy" decoding="async">
+              <img src="Images/cucina-2.webp" alt="La cucina della locanda, foto 2" loading="lazy" decoding="async">
+              <img src="Images/cucina-3.webp" alt="La cucina della locanda, foto 3" loading="lazy" decoding="async">
+              <img src="Images/cucina-4.webp" alt="La cucina della locanda, foto 4" loading="lazy" decoding="async">
+            </div>
+            <button class="photo-carousel-button prev" type="button" aria-label="Foto precedente">‹</button>
+            <button class="photo-carousel-button next" type="button" aria-label="Foto successiva">›</button>
+            <div class="photo-carousel-dots" aria-label="Seleziona una foto">
+              <button class="photo-carousel-dot" type="button" aria-label="Mostra foto 1" aria-current="true"></button>
+              <button class="photo-carousel-dot" type="button" aria-label="Mostra foto 2" aria-current="false"></button>
+              <button class="photo-carousel-dot" type="button" aria-label="Mostra foto 3" aria-current="false"></button>
+              <button class="photo-carousel-dot" type="button" aria-label="Mostra foto 4" aria-current="false"></button>
+            </div>
+          </div>
+        </div>
         <div class="food-copy">
           <div class="eyebrow">La cucina e il menu</div>
           <h2>Ogni giorno, qualcosa di buono.</h2>
@@ -255,7 +320,22 @@
           <p>E se ti trovi bene, puoi fermarti più a lungo. Camere accoglienti, tranquillità e il piacere di svegliarsi circondati dalla campagna: nessuna fretta di ripartire. Per disponibilità, tariffe e soggiorni, scrivici o chiamaci.</p>
           <a class="button" href="#contatti">Chiedi informazioni sulle camere</a>
         </div>
-        <img src="Images/camera.webp" alt="Una camera della locanda" loading="lazy" decoding="async">
+        <div class="photo-carousel" data-carousel aria-label="Galleria fotografica delle camere">
+          <div class="photo-carousel-track">
+            <img src="Images/camera.webp" alt="Camera della locanda, foto 1" loading="lazy" decoding="async">
+            <img src="Images/camera-2.webp" alt="Camera della locanda, foto 2" loading="lazy" decoding="async">
+            <img src="Images/camera-3.webp" alt="Camera della locanda, foto 3" loading="lazy" decoding="async">
+            <img src="Images/camera-4.webp" alt="Camera della locanda, foto 4" loading="lazy" decoding="async">
+          </div>
+          <button class="photo-carousel-button prev" type="button" aria-label="Foto precedente">‹</button>
+          <button class="photo-carousel-button next" type="button" aria-label="Foto successiva">›</button>
+          <div class="photo-carousel-dots" aria-label="Seleziona una foto">
+            <button class="photo-carousel-dot" type="button" aria-label="Mostra foto 1" aria-current="true"></button>
+            <button class="photo-carousel-dot" type="button" aria-label="Mostra foto 2" aria-current="false"></button>
+            <button class="photo-carousel-dot" type="button" aria-label="Mostra foto 3" aria-current="false"></button>
+            <button class="photo-carousel-dot" type="button" aria-label="Mostra foto 4" aria-current="false"></button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -281,6 +361,57 @@
       </div>
     </section>
 
+
+    <!-- ======================================================
+         LA LOCANDA IN IMMAGINI — GALLERIA FOTO
+         MODIFICA QUI:
+         - Per cambiare una foto, modifica il nome nel relativo src="Images/..."
+         - I nomi sono momento-01.webp ... momento-20.webp nella cartella Images.
+         - Per cambiare una foto, modifica href e src dello stesso blocco.
+         - Per aggiungere altre foto, duplica un blocco e aggiorna href, src e alt.
+         - Per ridurre il numero, elimina i blocchi che non vuoi mostrare.
+         - La griglia si adatta automaticamente al numero di foto.
+         ====================================================== -->
+    <section class="section moments" id="momenti">
+      <div class="wrap">
+        <div class="moments-intro">
+          <div>
+            <div class="eyebrow">Un assaggio della nostra atmosfera</div>
+            <h2>Ci sono posti che si raccontano meglio con uno sguardo.</h2>
+          </div>
+          <p>Una tavola pronta, il verde intorno, il piacere di stare insieme. Lasciati ispirare dalle immagini e immagina il tuo prossimo momento qui da noi.</p>
+        </div>
+
+        <div class="moments-grid">
+          <a class="moment-photo" href="Images/momento-01.webp" target="_blank" rel="noopener"><img src="Images/momento-01.webp" alt="La locanda, uno scorcio degli spazi" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-02.webp" target="_blank" rel="noopener"><img src="Images/momento-02.webp" alt="Un dettaglio della tavola" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-03.webp" target="_blank" rel="noopener"><img src="Images/momento-03.webp" alt="La cucina e i suoi sapori" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-04.webp" target="_blank" rel="noopener"><img src="Images/momento-04.webp" alt="La campagna intorno alla locanda" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-05.webp" target="_blank" rel="noopener"><img src="Images/momento-05.webp" alt="Un angolo all'aperto" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-06.webp" target="_blank" rel="noopener"><img src="Images/momento-06.webp" alt="Un momento da condividere" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-07.webp" target="_blank" rel="noopener"><img src="Images/momento-07.webp" alt="Un particolare della locanda" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-08.webp" target="_blank" rel="noopener"><img src="Images/momento-08.webp" alt="La natura e gli spazi verdi" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-09.webp" target="_blank" rel="noopener"><img src="Images/momento-09.webp" alt="Un piatto preparato in locanda" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-10.webp" target="_blank" rel="noopener"><img src="Images/momento-10.webp" alt="Un ultimo scorcio da ricordare" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-11.webp" aria-label="Apri la foto 11"><img src="Images/momento-11.webp" alt="Un altro scorcio della locanda" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-12.webp" aria-label="Apri la foto 12"><img src="Images/momento-12.webp" alt="Un dettaglio di ospitalità" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-13.webp" aria-label="Apri la foto 13"><img src="Images/momento-13.webp" alt="La locanda e i suoi ambienti" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-14.webp" aria-label="Apri la foto 14"><img src="Images/momento-14.webp" alt="Un momento a tavola" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-15.webp" aria-label="Apri la foto 15"><img src="Images/momento-15.webp" alt="La campagna intorno alla locanda" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-16.webp" aria-label="Apri la foto 16"><img src="Images/momento-16.webp" alt="Un particolare degli spazi esterni" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-17.webp" aria-label="Apri la foto 17"><img src="Images/momento-17.webp" alt="Un dettaglio della cucina" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-18.webp" aria-label="Apri la foto 18"><img src="Images/momento-18.webp" alt="Un angolo da scoprire" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-19.webp" aria-label="Apri la foto 19"><img src="Images/momento-19.webp" alt="La natura e l'atmosfera della locanda" loading="lazy" decoding="async"></a>
+          <a class="moment-photo" href="Images/momento-20.webp" aria-label="Apri la foto 20"><img src="Images/momento-20.webp" alt="Un ricordo da portare con sé" loading="lazy" decoding="async"></a>
+        </div>
+
+        <div class="moments-bottom">
+          <p><strong>Il prossimo ricordo potrebbe essere il tuo.</strong><br>Scegli il giorno, prenota il tuo tavolo e vieni a vivere la locanda dal vivo.</p>
+          <a class="button" href="#prenota">Prenota il tuo momento ↗</a>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="contatti">
       <div class="wrap contact-grid">
         <div>
@@ -290,7 +421,7 @@
             <div><h3>Dove siamo</h3><p>Locanda il Pagliaccetto<br><em>Via Casale di Tragliatella 95, Tragliatella</em></p></div>
             <div><h3>Contatti</h3><p><a href="tel:+393334429551">+39 333 442 9551</a><br><a href="mailto: ilpagliaccetto77@gmail.com">ilpagliaccetto77@gmail.com</a></p></div>
             <div><h3>Seguici</h3><p><a href="https://www.instagram.com/ilpagliaccetto/" target="_blank" rel="noopener"><i>Instagram ↗</i></a><br></a></p></div>
-            <div><h3>Orari</h3><p>Giovedi: 19:00-23:30 <br> Venerdi-Sabato: 12:00-23:30<br> Domenica: 12:00-16:00 </p></div>
+            <div><h3>Orari</h3><p>MODIFICA QUI: inserisci giorni e orari di apertura. Per aperture e disponibilità aggiornate, contattaci.</p></div>
           </div>
         </div>
         <div class="request-box">
@@ -376,6 +507,92 @@
     dateInput.min = localToday;
   </script>
   
+
+
+  <script>
+    // Gallerie fotografiche con frecce, indicatori e scorrimento touch.
+    document.querySelectorAll('[data-carousel]').forEach((carousel) => {
+      const track = carousel.querySelector('.photo-carousel-track');
+      const slides = Array.from(track.querySelectorAll('img'));
+      const dots = Array.from(carousel.querySelectorAll('.photo-carousel-dot'));
+      let index = 0;
+      let touchStartX = 0;
+      const update = () => {
+        track.style.transform = `translateX(-${index * 100}%)`;
+        dots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === index)));
+      };
+      carousel.querySelector('.prev').addEventListener('click', () => { index = (index - 1 + slides.length) % slides.length; update(); });
+      carousel.querySelector('.next').addEventListener('click', () => { index = (index + 1) % slides.length; update(); });
+      dots.forEach((dot, i) => dot.addEventListener('click', () => { index = i; update(); }));
+      carousel.addEventListener('touchstart', (event) => { touchStartX = event.changedTouches[0].clientX; }, { passive: true });
+      carousel.addEventListener('touchend', (event) => {
+        const delta = event.changedTouches[0].clientX - touchStartX;
+        if (Math.abs(delta) > 40) { index = (index + (delta < 0 ? 1 : -1) + slides.length) % slides.length; update(); }
+      }, { passive: true });
+    });
+  </script>
+
+
+  <!-- Visualizzazione foto in sovraimpressione -->
+  <div class="moments-lightbox" id="moments-lightbox" role="dialog" aria-modal="true" aria-label="Visualizzazione fotografie" aria-hidden="true">
+    <button class="lightbox-close" type="button" aria-label="Chiudi">×</button>
+    <button class="lightbox-arrow lightbox-prev" type="button" aria-label="Foto precedente">‹</button>
+    <img src="" alt="" id="lightbox-image">
+    <button class="lightbox-arrow lightbox-next" type="button" aria-label="Foto successiva">›</button>
+    <div class="lightbox-count" id="lightbox-count"></div>
+  </div>
+  <script>
+    // Galleria: apertura in sovraimpressione, navigazione con frecce e tasto ESC.
+    (() => {
+      const links = Array.from(document.querySelectorAll('.moments-grid .moment-photo'));
+      const modal = document.getElementById('moments-lightbox');
+      const image = document.getElementById('lightbox-image');
+      const counter = document.getElementById('lightbox-count');
+      const closeButton = modal.querySelector('.lightbox-close');
+      let current = 0;
+      let previousFocus = null;
+
+      function show(index) {
+        current = (index + links.length) % links.length;
+        const thumb = links[current].querySelector('img');
+        image.src = thumb.src;
+        image.alt = thumb.alt;
+        counter.textContent = `${current + 1} / ${links.length}`;
+      }
+      function open(index) {
+        previousFocus = document.activeElement;
+        show(index);
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-open');
+        closeButton.focus();
+      }
+      function close() {
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lightbox-open');
+        image.src = '';
+        if (previousFocus) previousFocus.focus();
+      }
+
+      links.forEach((link, index) => {
+        link.addEventListener('click', event => {
+          event.preventDefault();
+          open(index);
+        });
+      });
+      closeButton.addEventListener('click', close);
+      modal.querySelector('.lightbox-prev').addEventListener('click', () => show(current - 1));
+      modal.querySelector('.lightbox-next').addEventListener('click', () => show(current + 1));
+      modal.addEventListener('click', event => { if (event.target === modal) close(); });
+      document.addEventListener('keydown', event => {
+        if (!modal.classList.contains('is-open')) return;
+        if (event.key === 'Escape') close();
+        if (event.key === 'ArrowLeft') show(current - 1);
+        if (event.key === 'ArrowRight') show(current + 1);
+      });
+    })();
+  </script>
 
 </body>
 </html>
